@@ -1,0 +1,19 @@
+# dockerコンテナでgpuを使用可能にし、/homeをコンテナ内の/homeにマウント
+version: '3.8'
+
+services:
+  ubuntu-cuda:
+    build: .
+    runtime: nvidia
+    volumes:
+      - ./home:/home
+      - /tmp/.X11-unix/:/tmp/.X11-unix:ro
+    working_dir: /home/Dreamer
+    tty: true
+    ports:
+      - 8888:8888
+      - 6006:6006
+    privileged: true
+    devices:
+      - /dev/video0:/dev/video0
+    command: jupyter-lab --port=8888 --ip=0.0.0.0 --allow-root --NotebookApp.token=''
